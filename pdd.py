@@ -11,6 +11,9 @@ if 'order_confirmed' not in st.session_state:
 if 'payment_completed' not in st.session_state:
     st.session_state.payment_completed = False
 
+if 'reviewed_order' not in st.session_state:
+    st.session_state.reviewed_order = False
+
 # Title of the App
 st.title("ServDish - Your Personal Chef at Home")
 
@@ -59,8 +62,10 @@ if st.session_state.logged_in:
         st.write(f"*Selected Beverages:* {', '.join(selected_beverages)}")
         st.write(f"*Service Date:* {order_date}")
         st.write(f"*Service Time:* {order_time}")
+        st.session_state.reviewed_order = True
 
-        # Billing Page
+    # Payment Option after reviewing order
+    if st.session_state.reviewed_order:
         st.header("Billing Details")
         chef_cost = 300
         vegetable_cost = st.number_input("Enter Market Vegetable Cost (₹)", min_value=0, value=300)
@@ -86,17 +91,14 @@ if st.session_state.logged_in:
             st.session_state.order_confirmed = True
             st.success(f"Order confirmed for {order_date} at {order_time}! A chef will arrive at your home as scheduled.")
 
-# Payment Option after Order Confirmation
-if st.session_state.order_confirmed and not st.session_state.payment_completed:
-    st.header("Payment Mode")
-    payment_modes = ["Cash on Delivery (COD)", "Credit Card", "Debit Card", "Online Banking", "UPI"]
-    selected_payment_mode = st.selectbox("Select Payment Mode", payment_modes)
+    # Payment Option after Order Confirmation
+    if st.session_state.order_confirmed and not st.session_state.payment_completed:
+        st.header("Payment Mode")
+        payment_modes = ["Cash on Delivery (COD)", "Credit Card", "Debit Card", "Online Banking", "UPI"]
+        selected_payment_mode = st.selectbox("Select Payment Mode", payment_modes)
 
-    if st.button("Make Payment"):
-        st.session_state.payment_completed = True
-        st.success(f"Payment method selected: {selected_payment_mode}. Your order is now complete!")
+        if st.button("Make Payment"):
+            st.session_state.payment_completed = True
+            st.success(f"Payment method selected: {selected_payment_mode}. Your order is now complete!")
 
-# Display the footer only after payment is completed
-if st.session_state.payment_completed:
-    st.write("---")
-    st.write("Thank you for using ServDish!")
+# Display the footer only after payment is
