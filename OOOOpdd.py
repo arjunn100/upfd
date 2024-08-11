@@ -45,7 +45,9 @@ if st.session_state.logged_in:
     # Date and Time Selection
     st.header("Select Date and Time for the Service")
     order_date = st.date_input("Select Date", datetime.today())
-    order_time = st.time_input("Select Time", datetime.now().time())
+    # Set a fixed default time for testing
+    default_time = datetime.strptime("12:00", "%H:%M").time()
+    order_time = st.time_input("Select Time", default_time)
 
     # Beverage Selection
     st.header("Choose Your Beverages")
@@ -55,13 +57,13 @@ if st.session_state.logged_in:
     # Order Summary
     if st.button("Review Order"):
         st.header("Order Summary")
-        st.write(f"*Name:* {name}")
-        st.write(f"*Contact Number:* {contact_number}")
-        st.write(f"*Address:* {address}")
-        st.write(f"*Selected Cuisine:* {selected_cuisine}")
-        st.write(f"*Selected Beverages:* {', '.join(selected_beverages)}")
-        st.write(f"*Service Date:* {order_date}")
-        st.write(f"*Service Time:* {order_time}")
+        st.write(f"Name: {name}")
+        st.write(f"Contact Number: {contact_number}")
+        st.write(f"Address: {address}")
+        st.write(f"Selected Cuisine: {selected_cuisine}")
+        st.write(f"Selected Beverages: {', '.join(selected_beverages)}")
+        st.write(f"Service Date: {order_date}")
+        st.write(f"Service Time: {order_time}")
         st.session_state.reviewed_order = True
 
     # Payment Option after reviewing order
@@ -78,14 +80,14 @@ if st.session_state.logged_in:
         cgst = subtotal * 0.09  # 9% CGST
         total_cost = subtotal + sgst + cgst
 
-        st.write(f"*Chef Cost:* ₹{chef_cost}")
-        st.write(f"*Vegetable Cost:* ₹{vegetable_cost}")
-        st.write(f"*Service Cost:* ₹{service_cost}")
-        st.write(f"*Other Ingredients Cost:* ₹{other_ingredients_cost}")
-        st.write(f"*Delivery Cost:* ₹{delivery_cost}")
-        st.write(f"*SGST (9%):* ₹{sgst:.2f}")
-        st.write(f"*CGST (9%):* ₹{cgst:.2f}")
-        st.write(f"*Total Amount:* ₹{total_cost:.2f}")
+        st.write(f"Chef Cost: ₹{chef_cost}")
+        st.write(f"Vegetable Cost: ₹{vegetable_cost}")
+        st.write(f"Service Cost: ₹{service_cost}")
+        st.write(f"Other Ingredients Cost: ₹{other_ingredients_cost}")
+        st.write(f"Delivery Cost: ₹{delivery_cost}")
+        st.write(f"SGST (9%): ₹{sgst:.2f}")
+        st.write(f"CGST (9%): ₹{cgst:.2f}")
+        st.write(f"Total Amount: ₹{total_cost:.2f}")
 
         if st.button("Confirm Order"):
             st.session_state.order_confirmed = True
@@ -104,7 +106,7 @@ if st.session_state.logged_in:
             cvv = st.text_input("Enter CVV", type="password")
         
         elif selected_payment_mode == "Cash on Delivery (COD)":
-            st.write("**Note:** ₹5 extra will be charged for Cash on Delivery.")
+            st.write("Note: ₹5 extra will be charged for Cash on Delivery.")
         
         elif selected_payment_mode == "UPI":
             upi_id = st.text_input("Enter UPI ID")
