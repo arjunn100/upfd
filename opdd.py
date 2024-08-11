@@ -97,8 +97,23 @@ if st.session_state.logged_in:
         payment_modes = ["Cash on Delivery (COD)", "Credit Card", "Debit Card", "Online Banking", "UPI"]
         selected_payment_mode = st.selectbox("Select Payment Mode", payment_modes)
 
+        # Additional details based on payment mode
+        if selected_payment_mode in ["Credit Card", "Debit Card"]:
+            card_number = st.text_input("Enter Card Number")
+            expiry_date = st.text_input("Enter Expiry Date (MM/YY)")
+            cvv = st.text_input("Enter CVV", type="password")
+        
+        elif selected_payment_mode == "Cash on Delivery (COD)":
+            st.write("**Note:** ₹5 extra will be charged for Cash on Delivery.")
+        
+        elif selected_payment_mode == "UPI":
+            upi_id = st.text_input("Enter UPI ID")
+
         if st.button("Make Payment"):
             st.session_state.payment_completed = True
             st.success(f"Payment method selected: {selected_payment_mode}. Your order is now complete!")
 
-# Display the footer only after payment is
+# Display the footer only after payment is completed
+if st.session_state.payment_completed:
+    st.write("---")
+    st.write("Thank you for using ServDish!")
